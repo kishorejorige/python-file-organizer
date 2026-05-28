@@ -6,12 +6,15 @@ import sys
 from utils import get_category, get_unique_filename
 
 if len(sys.argv) < 2:
-    print("Usage: python organizer.py <folder_path>")
+    #print("Usage: python organizer.py <folder_path>")
+    print("Usage: python organizer.py <folder_path> [--dry-run]")
     sys.exit()
     
 folder_path = Path(sys.argv[1])
 
 dry_run = "--dry-run" in sys.argv
+
+moved_files = 0
 
 if not folder_path.exists():
     print("Error: Folder does not exist")
@@ -42,3 +45,8 @@ for item in folder_path.iterdir():
         else: 
             shutil.move(str(item), str(target_path)) 
             print(f"Moved: {item.name} -> {target_path.name}")
+
+        moved_files += 1
+        
+print("\nOrganization Complete")
+print(f"Total processed files: {moved_files}")
