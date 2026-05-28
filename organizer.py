@@ -2,7 +2,8 @@ from pathlib import Path
 import shutil
 import sys
 
-from utils import get_category
+#from utils import get_category
+from utils import get_category, get_unique_filename
 
 if len(sys.argv) < 2:
     print("Usage: python organizer.py <folder_path>")
@@ -30,6 +31,8 @@ for item in folder_path.iterdir():
         target_folder.mkdir(exist_ok=True)
 
         target_path = target_folder / item.name
+        
+        target_path = get_unique_filename(target_path)
 
         shutil.move(str(item), str(target_path))
 
