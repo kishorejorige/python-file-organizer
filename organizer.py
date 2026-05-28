@@ -11,6 +11,8 @@ if len(sys.argv) < 2:
     
 folder_path = Path(sys.argv[1])
 
+dry_run = "--dry-run" in sys.argv
+
 if not folder_path.exists():
     print("Error: Folder does not exist")
     sys.exit()
@@ -34,7 +36,9 @@ for item in folder_path.iterdir():
         
         target_path = get_unique_filename(target_path)
 
-        shutil.move(str(item), str(target_path))
-
-        print(f"Moved: {item.name} -> {category}")
-
+        if dry_run: 
+            print(f"Would move: {item.name} -> {target_path.name}") 
+            
+        else: 
+            shutil.move(str(item), str(target_path)) 
+            print(f"Moved: {item.name} -> {target_path.name}")
