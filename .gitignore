@@ -4,3 +4,5 @@ venv/
 logs/
 .env
 .DS_Store
+test_files/
+
