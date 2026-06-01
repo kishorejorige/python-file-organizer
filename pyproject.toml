@@ -14,3 +14,10 @@ packages = ["organizer"]
 
 [project.scripts]
 file-organizer = "organizer.main:main"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]  # errors, pyflakes, import sorting

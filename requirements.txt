@@ -3,4 +3,5 @@ packaging==26.2
 pluggy==1.6.0
 Pygments==2.20.0
 pytest==9.0.3
--e git+ssh://git@github.com/jorige3/python-file-organizer.git@3d537448403a771b45539a314ca5f2449f06428e#egg=python_file_organizer
+-e git+ssh://git@github.com/jorige3/python-file-organizer.git@f66f7a73c1114d154f09e6a5e6ad047ac3dc5671#egg=python_file_organizer
+ruff==0.15.15

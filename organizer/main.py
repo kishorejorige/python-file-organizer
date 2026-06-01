@@ -1,11 +1,10 @@
-from pathlib import Path
 import argparse
 import shutil
+from pathlib import Path
 
-from organizer.utils import get_category, get_unique_filename
 from organizer.config import FILE_TYPES
 from organizer.logger import setup_logger
-
+from organizer.utils import get_category, get_unique_filename
 
 ORGANIZED_FOLDERS = set(FILE_TYPES.keys())
 
