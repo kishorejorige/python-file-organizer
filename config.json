@@ -1,5 +1,30 @@
 {
   "dry_run": false,
   "recursive": true,
-  "create_unknown_folder": true
+  "create_unknown_folder": true,
+
+  "ignore_folders": [
+    ".git",
+    "__pycache__",
+    "node_modules",
+    "venv",
+    "Images",
+    "Documents",
+    "Videos",
+    "Audio",
+    "Archives"
+  ],
+
+  "rules": [
+    {
+      "name": "Images",
+      "extensions": [".jpg", ".png", ".jpeg"],
+      "folder": "Images"
+    },
+    {
+      "name": "Documents",
+      "extensions": [".pdf", ".docx", ".txt"],
+      "folder": "Documents"
+    }
+  ]
 }

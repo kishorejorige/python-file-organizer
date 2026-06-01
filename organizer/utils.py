@@ -1,15 +1,12 @@
-#from config import FILE_TYPES
-
-from organizer.config import FILE_TYPES
+from organizer.rules_loader import load_rules
 
 
-def get_category(extension):
+def get_category(extension, rules):
     extension = extension.lower()
 
-
-    for category, extensions in FILE_TYPES.items():
-        if extension in extensions:
-            return category
+    for rule in rules:
+        if extension in rule["extensions"]:
+            return rule["folder"]
 
     return "Others"
 
