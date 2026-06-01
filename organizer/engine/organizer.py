@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Dict, Optional, Tuple
+from typing import List, Dict, Optional
 
 from organizer.engine import rules as rules_module
 from organizer.io import safe_move

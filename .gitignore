@@ -14,3 +14,7 @@ test_files/
 *.iml
 *.sublime-project
 *.sublime-workspace 
+build/
+dist/
+*.spec
+file-organizer

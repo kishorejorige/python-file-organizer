@@ -1,7 +1,5 @@
-from pathlib import Path
 
 from organizer.engine.organizer import OrganizerEngine
-from organizer.engine import rules as rules_module
 from organizer.logger import setup_logger
 
 
