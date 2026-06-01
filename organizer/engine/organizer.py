@@ -1,8 +1,8 @@
 from pathlib import Path
-import shutil
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 
 from organizer.engine import rules as rules_module
+from organizer.io import safe_move
 
 
 class OrganizerEngine:
@@ -44,13 +44,10 @@ class OrganizerEngine:
         target_folder.mkdir(parents=True, exist_ok=True)
 
         target_path = target_folder / path.name
-
         # avoid infinite loop: if target is inside source tree and equals path, skip
-        try:
-            target_path = self._get_unique_filename(target_path)
-        except Exception:
+        if path.resolve() == target_path.resolve():
             if self.logger:
-                self.logger.warning(f"Could not compute unique filename for {target_path}")
+                self.logger.warning(f"SKIPPED (same path) | {path}")
             return None
 
         if dry_run:
@@ -58,13 +55,19 @@ class OrganizerEngine:
                 self.logger.info(f"DRY RUN | {path} -> {target_path}")
             return target_path
 
-        # perform move
-        shutil.move(str(path), str(target_path))
-        if self.logger:
-            self.logger.info(f"MOVED | {path} -> {target_path}")
-        return target_path
+        # perform safe move via IO layer
+        try:
+            final, moved = safe_move(path, target_path)
+            if self.logger:
+                self.logger.info(f"MOVED | {path} -> {final}")
+            return final
+        except Exception as exc:  # pragma: no cover - filesystem errors
+            if self.logger:
+                self.logger.exception(f"ERROR moving {path} -> {target_path}: {exc}")
+            return None
 
     def _get_unique_filename(self, target_path: Path) -> Path:
+        # Keep for backward compatibility if used elsewhere
         counter = 1
         file_stem = target_path.stem
         file_suffix = target_path.suffix
