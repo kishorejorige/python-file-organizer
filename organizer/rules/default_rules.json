@@ -1,0 +1,69 @@
+[
+  {
+    "folder": "Images",
+    "extensions": [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".gif",
+      ".bmp",
+      ".svg",
+      ".webp",
+      ".tiff",
+      ".ico",
+      ".heic",
+      ".psd",
+      ".ai",
+      ".eps",
+      ".indd",
+      ".raw",
+      ".nef",
+      ".cr2",
+      ".orf",
+      ".sr2",
+      ".dng"
+    ]
+  },
+  {
+    "folder": "Documents",
+    "extensions": [
+      ".pdf",
+      ".docx",
+      ".txt",
+      ".xlsx",
+      ".pptx",
+      ".odt",
+      ".ods",
+      ".odp",
+      ".rtf",
+      ".csv",
+      ".md",
+      ".tex"
+    ]
+  },
+  {
+    "folder": "Videos",
+    "extensions": [
+      ".mp4",
+      ".mkv",
+      ".avi",
+      ".mov",
+      ".wmv",
+      ".flv",
+      ".webm",
+      ".mpeg",
+      ".mpg",
+      ".3gp"
+    ]
+  },
+  {
+    "folder": "Audio",
+    "extensions": [
+      ".mp3",
+      ".wav",
+      ".flac",
+      ".aac",
+      ".m4a"
+    ]
+  }
+]

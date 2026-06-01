@@ -14,7 +14,7 @@ dependencies = []
 file-organizer = "organizer.cli:main"
 
 [tool.setuptools]
-packages = ["organizer"]
+packages = ["organizer", "organizer.engine", "organizer.rules"]
 
 [tool.setuptools.package-data]
-organizer = ["*.json"]
+organizer = ["rules/*.json"]
