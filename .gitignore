@@ -1,8 +1,16 @@
 venv/
-**pycache**/
+__pycache__/
 *.pyc
-logs/
-.env
-.DS_Store
+
+logs/*.log
+
 test_files/
 
+.pytest_cache/
+
+*.egg-info/
+.DS_Store
+.idea/
+*.iml
+*.sublime-project
+*.sublime-workspace 

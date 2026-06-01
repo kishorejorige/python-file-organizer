@@ -1,0 +1,6 @@
+iniconfig==2.3.0
+packaging==26.2
+pluggy==1.6.0
+Pygments==2.20.0
+pytest==9.0.3
+-e git+ssh://git@github.com/jorige3/python-file-organizer.git@3d537448403a771b45539a314ca5f2449f06428e#egg=python_file_organizer
