@@ -1,5 +1,3 @@
-import json
-from pathlib import Path
 
 from organizer.engine import rules as rules_module
 
