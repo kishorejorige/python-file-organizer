@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from logging.handlers import RotatingFileHandler
 
 
 def setup_logger(log_file: str = "logs/organizer.log"):
@@ -12,12 +13,13 @@ def setup_logger(log_file: str = "logs/organizer.log"):
 
     logger.setLevel(logging.INFO)
 
-    handler = logging.FileHandler(log_path)
-    fmt = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s")
-    handler.setFormatter(fmt)
-    logger.addHandler(handler)
+    # Rotating file handler to avoid unbounded growth
+    fh = RotatingFileHandler(str(log_path), maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8")
+    fmt = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z")
+    fh.setFormatter(fmt)
+    logger.addHandler(fh)
 
-    # also log to console
+    # console handler
     ch = logging.StreamHandler()
     ch.setFormatter(fmt)
     logger.addHandler(ch)
