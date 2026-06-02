@@ -37,6 +37,34 @@ class Handler(FileSystemEventHandler):
             self._timer = threading.Timer(self.debounce_seconds, self._flush)
             self._timer.start()
 
+    def on_moved(self, event):
+        # moved events may include dest_path; handle both
+        if event.is_directory:
+            return
+        try:
+            dest = Path(event.dest_path)
+        except Exception:
+            dest = Path(event.src_path)
+
+        with self._lock:
+            self._pending.add(dest)
+            if self._timer:
+                self._timer.cancel()
+            self._timer = threading.Timer(self.debounce_seconds, self._flush)
+            self._timer.start()
+
+    def on_modified(self, event):
+        # consider modified files (e.g., atomic saves)
+        if event.is_directory:
+            return
+        src = Path(event.src_path)
+        with self._lock:
+            self._pending.add(src)
+            if self._timer:
+                self._timer.cancel()
+            self._timer = threading.Timer(self.debounce_seconds, self._flush)
+            self._timer.start()
+
     def _flush(self):
         with self._lock:
             items = list(self._pending)
