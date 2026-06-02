@@ -1,9 +1,19 @@
 import json
+import pkgutil
 from pathlib import Path
 from typing import List, Dict
 
 
 def load_default_rules() -> List[Dict]:
+    # Try to load packaged data (works inside zipapps, PyInstaller bundles, etc.)
+    try:
+        data = pkgutil.get_data("organizer", "rules/default_rules.json")
+        if data:
+            return json.loads(data.decode("utf-8"))
+    except Exception:
+        pass
+
+    # Fallback to file on disk (useful for local development)
     pkg_rules = Path(__file__).parent.parent / "rules" / "default_rules.json"
     if not pkg_rules.exists():
         return []

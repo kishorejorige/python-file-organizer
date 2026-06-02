@@ -37,10 +37,20 @@ jobs:
 
       - name: Build single-file executable (PyInstaller)
         run: |
-          # Put pyinstaller output in a per-os folder
+          # Put pyinstaller output in a per-os folder and bundle rules JSON
           OUT=dist/pyinstaller-${{ matrix.os }}
           mkdir -p "$OUT"
-          pyinstaller --onefile --name file-organizer --distpath "$OUT" organizer/cli.py
+          # choose platform-specific add-data separator and output name
+          SEP=:
+          NAME=file-organizer-linux
+          if [ "${{ matrix.os }}" = "windows-latest" ]; then
+            SEP=";"
+            NAME=file-organizer-windows.exe
+          elif [ "${{ matrix.os }}" = "macos-latest" ]; then
+            NAME=file-organizer-macos
+          fi
+          # Bundle the packaged rules file into the executable so runtime can read it
+          pyinstaller --onefile --name "$NAME" --distpath "$OUT" --add-data "organizer/rules/default_rules.json${SEP}organizer/rules" organizer/cli.py
 
       - name: List dist
         run: ls -la dist || true
