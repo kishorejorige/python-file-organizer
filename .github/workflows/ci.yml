@@ -33,7 +33,7 @@ jobs:
 
       - name: Install test/lint deps
         run: |
-          python -m pip install pytest ruff
+          python -m pip install pytest ruff watchdog
 
       - name: Run tests
         run: pytest -q
