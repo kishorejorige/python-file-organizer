@@ -119,3 +119,25 @@ def test_one_file_failure_isolation(tmp_path):
     assert (root / "Documents" / "good1.txt").exists()
     assert (root / "Documents" / "good2.txt").exists()
     assert f2.exists()  # The bad one remains unmoved
+
+
+def test_sibling_path_traversal_prevention(tmp_path):
+    root = tmp_path / "root"
+    root.mkdir()
+
+    # Create sibling folder
+    sibling = tmp_path / "root_sibling"
+    sibling.mkdir()
+
+    file_path = root / "file.txt"
+    file_path.write_text("hello")
+
+    # A rule trying to escape into a sibling folder
+    rules = [{"folder": "../root_sibling", "extensions": [".txt"]}]
+    logger = setup_logger(None)
+    cfg = {"ignore_dirs": [], "recursive": False}
+
+    engine = OrganizerEngine(rules=rules, config=cfg, logger=logger)
+    res = engine.process_file(root, file_path, dry_run=False)
+    assert res is None
+    assert file_path.exists()

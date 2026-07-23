@@ -49,7 +49,7 @@ class OrganizerEngine:
         try:
             resolved_root = root.resolve()
             resolved_target_folder = target_folder.resolve()
-            if not str(resolved_target_folder).startswith(str(resolved_root)):
+            if not resolved_target_folder.is_relative_to(resolved_root):
                 if self.logger:
                     self.logger.error(
                         f"PATH TRAVERSAL PREVENTED | Root: {resolved_root}, Target: {resolved_target_folder}"

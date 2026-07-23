@@ -1,0 +1,59 @@
+[
+  {
+    "folder": "Images",
+    "extensions": [
+      ".jpg",
+      ".jpeg",
+      ".png",
+      ".gif",
+      ".webp"
+    ]
+  },
+  {
+    "folder": "Documents",
+    "extensions": [
+      ".pdf",
+      ".txt",
+      ".docx",
+      ".odt",
+      ".rtf",
+      ".md"
+    ]
+  },
+  {
+    "folder": "Spreadsheets",
+    "extensions": [
+      ".xlsx",
+      ".xls",
+      ".csv",
+      ".ods"
+    ]
+  },
+  {
+    "folder": "Presentations",
+    "extensions": [
+      ".pptx",
+      ".ppt",
+      ".odp"
+    ]
+  },
+  {
+    "folder": "Archives",
+    "extensions": [
+      ".zip",
+      ".tar.gz",
+      ".rar",
+      ".7z"
+    ]
+  },
+  {
+    "folder": "Code",
+    "extensions": [
+      ".py",
+      ".js",
+      ".sh",
+      ".bat",
+      ".ps1"
+    ]
+  }
+]

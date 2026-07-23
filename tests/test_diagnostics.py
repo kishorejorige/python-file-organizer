@@ -44,10 +44,10 @@ def test_doctor_critical_failure_write_permission():
         assert exit_code == 1
 
 
-def test_doctor_log_destination_failure():
-    # Pass an invalid/unwritable log destination (e.g. trying to write directly as a directory or invalid chars)
-    # Using an empty log file or root-like invalid path to force failure
-    invalid_log = "/sys/class/unwritable_log.log"
+def test_doctor_log_destination_failure(tmp_path):
+    # Pass an invalid/unwritable log destination. A directory path cannot be opened for writing in append mode,
+    # which is cross-platform and guaranteed to fail on both Windows and Unix.
+    invalid_log = str(tmp_path)
     exit_code = run_doctor(invalid_log)
     assert exit_code == 1
 

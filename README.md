@@ -110,6 +110,30 @@ cd python-file-organizer
 uv sync --dev
 ```
 
+### Windows Quick Start
+
+If you are developing or running the project on Windows using PowerShell, you can use the following commands to get started:
+
+```powershell
+# Open the project folder
+cd E:\dev\projects\python-file-organizer
+
+# Install dependencies using uv
+uv sync
+
+# Run the test suite
+uv run pytest -v --basetemp=pytest-tmp
+
+# Run the organizer on a target folder
+uv run file-organizer path\to\folder
+
+# Run in Dry-Run mode to preview sorting decisions
+uv run file-organizer path\to\folder --dry-run
+
+# Execute the automated safe demo workflow
+powershell -ExecutionPolicy Bypass -File scripts/create_windows_demo.ps1
+```
+
 ---
 
 ## Usage Examples

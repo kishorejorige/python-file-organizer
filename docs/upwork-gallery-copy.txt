@@ -1,0 +1,5 @@
+PYTHON FILE ORGANIZER
+
+Automatically organize documents, images, spreadsheets, archives, code, and more.
+
+Clean Code • Dry-Run Safety • Windows & Linux Support

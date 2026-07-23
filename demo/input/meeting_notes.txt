@@ -1,0 +1,9 @@
+Upwork Portfolio Work Sample
+Project: Python File Organizer
+Date: 2026-07-23
+
+Meeting Agenda:
+- Review Windows compatibility
+- Check path traversal logic
+- Verify Python virtual environment health
+- Package files for catalog upload
