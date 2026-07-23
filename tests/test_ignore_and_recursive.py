@@ -1,4 +1,3 @@
-
 from organizer.engine.organizer import OrganizerEngine
 from organizer.logger import setup_logger
 

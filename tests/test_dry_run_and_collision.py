@@ -1,4 +1,3 @@
-
 from organizer.engine.organizer import OrganizerEngine
 from organizer.logger import setup_logger
 
@@ -20,6 +19,7 @@ def test_dry_run_and_collision(tmp_path):
     res = engine.process_file(src, f1, dry_run=True)
     assert res is not None
     assert f1.exists()
+    assert not (src / "Documents").exists()
 
     # actual move
     moved = engine.process_file(src, f1, dry_run=False)

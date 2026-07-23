@@ -1,4 +1,3 @@
-
 from organizer.engine import rules as rules_module
 
 

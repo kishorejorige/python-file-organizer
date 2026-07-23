@@ -1,26 +1,34 @@
-SHELL := /bin/bash
-
-.PHONY: help install-dev build pyinstaller dist release
+.PHONY: help install-dev build pyinstaller dist release lint format-check test
 
 help:
 	@echo "Makefile targets:"
-	@echo "  make install-dev   # install build tools"
-	@echo "  make build         # build sdist and wheel into dist/"
-	@echo "  make pyinstaller   # build a single-file executable into dist/pyinstaller/"
-	@echo "  make dist          # build both wheel/sdist and pyinstaller binary"
-	@echo "  make release       # run ./release.sh to publish a GitHub release (requires gh CLI)"
+	@echo "  make install-dev   # Install build/dev tools via uv"
+	@echo "  make lint          # Run ruff check"
+	@echo "  make format-check  # Run ruff format --check"
+	@echo "  make test          # Run pytest"
+	@echo "  make build         # Build sdist and wheel using uv build"
+	@echo "  make pyinstaller   # Build a single-file executable using PyInstaller via uv run"
+	@echo "  make dist          # Build both wheel/sdist and pyinstaller binary"
+	@echo "  make release       # Run ./release.sh (requires gh CLI)"
 
 install-dev:
-	python -m pip install --upgrade pip build pyinstaller
+	uv sync --dev
+
+lint:
+	uv run ruff check .
+
+format-check:
+	uv run ruff format --check .
+
+test:
+	uv run pytest
 
 build:
-	python -m pip install --upgrade pip build
-	python -m build
+	uv build
 
 pyinstaller:
-	python -m pip install --upgrade pyinstaller
-	mkdir -p dist/pyinstaller
-	pyinstaller --onefile --name file-organizer --distpath dist/pyinstaller organizer/cli.py
+	uv run python -c "from pathlib import Path; Path('dist/pyinstaller').mkdir(parents=True, exist_ok=True)"
+	uv run pyinstaller --clean -y --distpath dist/pyinstaller file-organizer.spec
 
 dist: build pyinstaller
 
