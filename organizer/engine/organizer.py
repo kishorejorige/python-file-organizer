@@ -12,8 +12,8 @@ class OrganizerEngine:
         self.logger = logger
 
     def should_skip(self, path: Path) -> bool:
-        # skip non-files
-        if not path.exists() or not path.is_file():
+        # skip non-files or symlinks for safety
+        if not path.exists() or not path.is_file() or path.is_symlink():
             return True
 
         # skip hidden files or files in hidden dirs
@@ -32,7 +32,9 @@ class OrganizerEngine:
 
         return False
 
-    def process_file(self, root: Path, path: Path, dry_run: Optional[bool] = False) -> Optional[Path]:
+    def process_file(
+        self, root: Path, path: Path, dry_run: Optional[bool] = False
+    ) -> Optional[Path]:
         if self.should_skip(path):
             if self.logger:
                 self.logger.info(f"SKIPPED | {path}")
@@ -41,13 +43,33 @@ class OrganizerEngine:
         category = rules_module.find_category_for_extension(self.rules, path.suffix)
 
         target_folder = root / category
-        target_folder.mkdir(parents=True, exist_ok=True)
-
         target_path = target_folder / path.name
-        # avoid infinite loop: if target is inside source tree and equals path, skip
+
+        # Prevent path traversal: ensure target is strictly inside root
+        try:
+            resolved_root = root.resolve()
+            resolved_target_folder = target_folder.resolve()
+            if not str(resolved_target_folder).startswith(str(resolved_root)):
+                if self.logger:
+                    self.logger.error(
+                        f"PATH TRAVERSAL PREVENTED | Root: {resolved_root}, Target: {resolved_target_folder}"
+                    )
+                return None
+        except Exception as exc:
+            if self.logger:
+                self.logger.error(f"PATH TRAVERSAL EXCEPTION | {exc}")
+            return None
+
+        # avoid infinite loop: if target equals path, skip
         if path.resolve() == target_path.resolve():
             if self.logger:
                 self.logger.warning(f"SKIPPED (same path) | {path}")
+            return None
+
+        # skip files already inside their target category folder
+        if path.parent.resolve() == target_folder.resolve():
+            if self.logger:
+                self.logger.info(f"ALREADY ORGANIZED | {path}")
             return None
 
         if dry_run:
@@ -57,11 +79,12 @@ class OrganizerEngine:
 
         # perform safe move via IO layer
         try:
+            target_folder.mkdir(parents=True, exist_ok=True)
             final, moved = safe_move(path, target_path)
             if self.logger:
                 self.logger.info(f"MOVED | {path} -> {final}")
             return final
-        except Exception as exc:  # pragma: no cover - filesystem errors
+        except Exception as exc:  # pragma: no cover
             if self.logger:
                 self.logger.exception(f"ERROR moving {path} -> {target_path}: {exc}")
             return None
@@ -84,20 +107,25 @@ class OrganizerEngine:
         if not root.exists() or not root.is_dir():
             raise FileNotFoundError(f"Root path not found: {root}")
 
-        processed = 0
-        # rglob with pattern to find files
+        # Convert to static list to prevent directory modification during iteration
         if self.config.get("recursive", True):
-            iterator = root.rglob("*")
+            items = list(root.rglob("*"))
         else:
-            iterator = root.iterdir()
+            items = list(root.iterdir())
 
-        for item in iterator:
-            if not item.is_file():
-                continue
+        processed = 0
+        for item in items:
+            try:
+                # Basic quick check before process_file
+                if not item.is_file() or item.is_symlink():
+                    continue
 
-            res = self.process_file(root, item, dry_run=dry_run)
-            if res:
-                processed += 1
+                res = self.process_file(root, item, dry_run=dry_run)
+                if res:
+                    processed += 1
+            except Exception as exc:
+                if self.logger:
+                    self.logger.error(f"ERROR processing file '{item}': {exc}")
 
         if self.logger:
             self.logger.info(f"RUN COMPLETE | Processed Files: {processed}")

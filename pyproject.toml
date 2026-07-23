@@ -7,8 +7,15 @@ name = "file-organizer"
 version = "1.2.0"
 description = "A CLI tool to organize files by type"
 readme = "README.md"
-requires-python = ">=3.10"
-dependencies = []
+requires-python = ">=3.12"
+authors = [
+    { name = "Kishore Kumar" }
+]
+license = { text = "MIT" }
+dependencies = ["watchdog>=4.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=9.0", "ruff>=0.15", "pyinstaller>=6.5.0"]
 
 [project.scripts]
 file-organizer = "organizer.cli:main"
@@ -18,3 +25,27 @@ packages = ["organizer", "organizer.engine", "organizer.rules"]
 
 [tool.setuptools.package-data]
 organizer = ["rules/*.json"]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.15.22",
+    "pyinstaller>=6.5.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = [
+    ".git",
+    ".venv",
+    "venv",
+    "build",
+    "dist",
+    ".pytest_cache",
+    ".ruff_cache",
+    "pytest-tmp",
+    "pytest-tmp-stale",
+    ".pytest-tmp",
+    "test_files",
+    "test_case"
+]

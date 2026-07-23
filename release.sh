@@ -34,24 +34,3 @@ fi
 echo "Creating release $TAG..."
 gh release create "$TAG" --notes-file "$NOTES_FILE"
 echo "Release $TAG created."
-#!/usr/bin/env bash
-set -euo pipefail
-: "${GH_TOKEN:?Set GH_TOKEN env var with repo scope (export GH_TOKEN=...)}"
-REPO="jorige3/python-file-organizer"
-TAG="v1.4.0"
-TITLE="v1.4.0"
-NOTES_FILE="/tmp/release_notes_v1.4.0.md"
-
-if [ ! -f "$NOTES_FILE" ]; then
-  echo "Release notes not found: $NOTES_FILE" >&2
-  exit 1
-fi
-
-DATA=$(jq -n --arg tag "$TAG" --arg name "$TITLE" --rawfile body "$NOTES_FILE" \
-  '{tag_name:$tag, name:$name, body:$body, draft:false, prerelease:false}')
-
-curl -sS -X POST \
-  -H "Authorization: token $GH_TOKEN" \
-  -H "Content-Type: application/json" \
-  -d "$DATA" \
-  "https://api.github.com/repos/$REPO/releases"

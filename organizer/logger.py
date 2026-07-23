@@ -1,27 +1,48 @@
 import logging
+import sys
 from pathlib import Path
 from logging.handlers import RotatingFileHandler
+from typing import Optional
 
 
-def setup_logger(log_file: str = "logs/organizer.log"):
-    log_path = Path(log_file)
-    log_path.parent.mkdir(parents=True, exist_ok=True)
-
+def setup_logger(
+    log_file: Optional[str] = "logs/organizer.log", level: int = logging.INFO
+):
     logger = logging.getLogger("organizer")
-    if logger.handlers:
-        return logger
+    logger.setLevel(level)
 
-    logger.setLevel(logging.INFO)
+    # Remove all existing handlers to prevent duplicates
+    for handler in list(logger.handlers):
+        logger.removeHandler(handler)
 
-    # Rotating file handler to avoid unbounded growth
-    fh = RotatingFileHandler(str(log_path), maxBytes=10 * 1024 * 1024, backupCount=5, encoding="utf-8")
-    fmt = logging.Formatter("%(asctime)s | %(levelname)s | %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z")
-    fh.setFormatter(fmt)
-    logger.addHandler(fh)
+    fmt = logging.Formatter(
+        "%(asctime)s | %(levelname)s | %(message)s", datefmt="%Y-%m-%dT%H:%M:%S%z"
+    )
 
-    # console handler
-    ch = logging.StreamHandler()
+    # Console handler
+    ch = logging.StreamHandler(sys.stdout)
+    ch.setLevel(level)
     ch.setFormatter(fmt)
     logger.addHandler(ch)
+
+    # File handler
+    if log_file:
+        log_path = Path(log_file)
+        try:
+            log_path.parent.mkdir(parents=True, exist_ok=True)
+            fh = RotatingFileHandler(
+                str(log_path),
+                maxBytes=10 * 1024 * 1024,
+                backupCount=5,
+                encoding="utf-8",
+            )
+            fh.setLevel(level)
+            fh.setFormatter(fmt)
+            logger.addHandler(fh)
+        except Exception as exc:
+            print(
+                f"Warning: Could not configure file logger at '{log_file}': {exc}",
+                file=sys.stderr,
+            )
 
     return logger

@@ -1,4 +1,6 @@
 venv/
+.venv/
+.codex-venv/
 __pycache__/
 *.pyc
 
@@ -7,6 +9,10 @@ logs/*.log
 test_files/
 
 .pytest_cache/
+.pytest-tmp/
+pytest-tmp/
+pytest-tmp-stale/
+
 
 *.egg-info/
 .DS_Store

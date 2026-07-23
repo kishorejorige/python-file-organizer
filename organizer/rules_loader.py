@@ -2,6 +2,7 @@
 
 Deprecated: use organizer.engine.rules directly for advanced usage.
 """
+
 from organizer.engine import rules as rules_module
 from organizer.config import load_config
 from pathlib import Path
