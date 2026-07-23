@@ -31,5 +31,28 @@ jobs:
       - name: Run linter (ruff)
         run: uv run ruff check .
 
+      - name: Check formatting (ruff)
+        run: uv run ruff format --check .
+
       - name: Run tests
         run: uv run pytest
+
+      - name: Test CLI version flag
+        run: uv run file-organizer --version
+
+      - name: Test CLI doctor diagnostics
+        run: uv run file-organizer doctor
+
+  docker-build:
+    name: Validate Docker Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: docker build -t python-file-organizer:local .
+
+      - name: Run Doctor in Docker
+        run: docker run --rm python-file-organizer:local
+
