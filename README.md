@@ -128,29 +128,37 @@ uv run file-organizer /path/to/organize --watch
 
 # Use a custom configuration file and rules file
 uv run file-organizer /path/to/organize --config custom_config.json --rules-file rules.json
+
+# Display the application version
+uv run file-organizer --version
+
+# Run the diagnostic health check (doctor subcommand)
+uv run file-organizer doctor
 ```
 
 ### CLI Reference
 
 ```
-usage: file-organizer [-h] [--config CONFIG] [--dry-run] [--log-file LOG_FILE]
-                      [--watch] [--recursive | --no-recursive] [--rules-file RULES_FILE]
+usage: file-organizer [-h] [--version] [--config CONFIG] [--dry-run]
+                      [--log-file LOG_FILE] [--watch]
+                      [--recursive | --no-recursive] [--rules-file RULES_FILE]
                       [--ignore-dir IGNORE_DIRS] [--verbose]
-                      path
+                      [path]
 
 Organize files into folders based on file type
 
 positional arguments:
-  path                  Folder path to organize
+  path                  Folder path to organize (or 'doctor' for diagnostics)
 
 options:
   -h, --help            show this help message and exit
-  --config CONFIG       Path to config file (default: config.json)
+  --version             show program's version number and exit
+  --config CONFIG       Path to config file
   --dry-run             Preview changes without moving files
-  --log-file LOG_FILE   Path to log file (default: logs/organizer.log)
+  --log-file LOG_FILE   Path to log file
   --watch               Watch folder and auto-organize
   --recursive, --no-recursive
-                        Scan subfolders recursively (default: True)
+                        Scan subfolders recursively
   --rules-file RULES_FILE
                         Path to a custom rules JSON file
   --ignore-dir IGNORE_DIRS
@@ -160,28 +168,70 @@ options:
 
 ---
 
+## Docker Support
+
+Python File Organizer can be run in a lightweight, containerized environment using Docker.
+
+### Building the Image
+
+To build the local Docker image:
+```bash
+docker build -t python-file-organizer:local .
+```
+
+### Running Diagnostics (Health Check)
+
+The default container command runs the `doctor` diagnostic subcommand:
+```bash
+docker run --rm python-file-organizer:local
+```
+
+### Organizing Directories via Mounts
+
+To organize directories on your host filesystem, mount them inside the container at `/data`:
+```bash
+docker run --rm \
+  -v /path/to/host/folder:/data \
+  python-file-organizer:local \
+  file-organizer /data --dry-run
+```
+
+> [!WARNING]
+> **Non-Root Permissions Caveat**: The container runs under a non-root system user `organizer` (UID `10001`) for security. Ensure that the directories you mount from the host allow read and write permissions for UID `10001` or are generally writable, otherwise file moves will fail due to Permission Denied errors.
+
+---
+
 ## Developer Commands
 
 The project uses a `Makefile` to simplify development workflows.
 
 ```bash
-# Install all development dependencies (pytest, ruff, pyinstaller)
+# Install all development dependencies (pytest, ruff, bandit, pip-audit, etc.)
 make install-dev
 
-# Run tests
+# Run pytest suite
 make test
 
-# Check code lint rules
+# Run Ruff linter check
 make lint
 
-# Verify code formatting matches constraints
+# Run Ruff format check
 make format-check
 
-# Compile python files and sdist/wheel packages into dist/
+# Run Bandit security scanner & pip-audit vulnerability checks
+make security-scan
+
+# Compile package sdist/wheel into dist/
 make build
 
 # Build a standalone executable binary using PyInstaller
 make pyinstaller
+
+# Build local Docker image
+make docker-build
+
+# Run doctor diagnostic check inside local Docker container
+make docker-test
 ```
 
 ---

@@ -8,6 +8,7 @@ from organizer.logger import setup_logger
 from organizer.engine import rules as rules_module
 from organizer.engine.organizer import OrganizerEngine
 from organizer.watcher import watch_folder
+from organizer.diagnostics import get_version, run_doctor
 
 
 def build_parser():
@@ -16,9 +17,17 @@ def build_parser():
         description="Organize files into folders based on file type",
     )
 
-    parser.add_argument("path", help="Folder path to organize")
+    parser.add_argument(
+        "--version",
+        action="version",
+        version=f"file-organizer {get_version()}",
+    )
 
-    parser.add_argument("--config", default="config.json", help="Path to config file")
+    parser.add_argument(
+        "path", nargs="?", help="Folder path to organize (or 'doctor' for diagnostics)"
+    )
+
+    parser.add_argument("--config", default=None, help="Path to config file")
 
     parser.add_argument(
         "--dry-run", action="store_true", help="Preview changes without moving files"
@@ -60,8 +69,21 @@ def main(argv=None):
     parser = build_parser()
     args = parser.parse_args(argv)
 
+    if args.path == "doctor":
+        sys.exit(run_doctor(args.log_file))
+
+    if args.path is None:
+        parser.print_usage(sys.stderr)
+        print(
+            "file-organizer: error: the following arguments are required: path",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+
+    config_path = args.config if args.config is not None else "config.json"
+    strict_config = args.config is not None
     try:
-        cfg = load_config(args.config, strict=True)
+        cfg = load_config(config_path, strict=strict_config)
     except Exception as exc:
         parser.error(str(exc))
 

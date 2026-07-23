@@ -52,7 +52,7 @@ def load_default_rules() -> List[Dict]:
         data = pkgutil.get_data("organizer", "rules/default_rules.json")
         if data:
             rules = json.loads(data.decode("utf-8"))
-    except Exception:
+    except Exception:  # nosec B110
         pass
 
     if not rules:

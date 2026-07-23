@@ -38,7 +38,7 @@ def safe_move(src: Path, dest: Path) -> Tuple[Path, bool]:
             if tmp_name.exists():
                 try:
                     tmp_name.unlink()
-                except Exception:
+                except Exception:  # nosec B110
                     pass
             shutil.move(str(src), str(final))
 
