@@ -2,6 +2,16 @@
 
 A clean, safe, and professional command-line tool designed to clean up clutter by automatically organizing files into categorized directories based on their extensions. It features an automated directory watcher, strict safety validation, deterministic collision resolution, and path-traversal prevention.
 
+## Platform Support
+
+Python File Organizer is designed and verified to run on both **Windows** and **Linux** platforms:
+- **Windows Support:** Full compatibility with Windows PowerShell and command prompts.
+- **Linux Support:** Tested on Linux terminals (bash, zsh).
+- **Standalone Binary:** Can be compiled into a standalone Windows `.exe` executable (via PyInstaller) for zero-dependency portability.
+- **Unified Tooling:** Consistent environment setup, dependency management, and verification commands using Python and the `uv` tool suite on both platforms.
+
+---
+
 ## Problem Solved
 
 Users often download files, save documents, or capture media into a single messy directory (like `Downloads` or `Desktop`). Manually grouping these files into subfolders is tedious and error-prone.
@@ -132,6 +142,56 @@ uv run file-organizer path\to\folder --dry-run
 
 # Execute the automated safe demo workflow
 powershell -ExecutionPolicy Bypass -File scripts/create_windows_demo.ps1
+```
+
+### Linux Quick Start
+
+If you are developing or running the project on Linux, you can use the following terminal commands to get started:
+
+```bash
+# Open the project folder
+cd /path/to/python-file-organizer
+
+# Sync development environment and install dependencies
+uv sync
+
+# Run the test suite
+uv run pytest -v --basetemp=pytest-tmp
+
+# Preview changes without moving any files (Dry-Run mode)
+uv run file-organizer /path/to/folder --dry-run
+
+# Run the organizer to sort files in a target folder
+uv run file-organizer /path/to/folder
+```
+
+### Cross-Platform Result Example
+
+The file organizer maintains identical sorting results on both Windows and Linux, utilizing platform-native path structures dynamically:
+
+#### Target Folder Contents (Unorganized)
+- Windows: `demo\organized\sales_report.xlsx`, `demo\organized\holiday_photo.jpg`
+- Linux: `demo/organized/sales_report.xlsx`, `demo/organized/holiday_photo.jpg`
+
+#### Organized Results (After Execution)
+Regardless of the platform, the organizer cleanly groups files into categorized folders using appropriate separators:
+
+**Windows PowerShell:**
+```text
+demo\organized\
+  ├── Images\
+  │   └── holiday_photo.jpg
+  └── Spreadsheets\
+      └── sales_report.xlsx
+```
+
+**Linux Bash:**
+```text
+demo/organized/
+  ├── Images/
+  │   └── holiday_photo.jpg
+  └── Spreadsheets/
+      └── sales_report.xlsx
 ```
 
 ---
